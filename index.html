@@ -248,6 +248,390 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/%E6%95%B0%E7%BB%84%E6%89%81%E5%B9%B3%E5%8C%96%EF%BC%8C%E5%8E%BB%E9%87%8D%EF%BC%8C%E6%8E%92%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨坤的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/16/%E6%95%B0%E7%BB%84%E6%89%81%E5%B9%B3%E5%8C%96%EF%BC%8C%E5%8E%BB%E9%87%8D%EF%BC%8C%E6%8E%92%E5%BA%8F/" itemprop="url">数组扁平化，去重，排序</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-16T12:22:08+08:00">
+                2020-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>数组的 扁平化， 去重， 排序</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 原数组</span></span><br><span class="line"><span class="keyword">var</span> arr = [[<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>],[<span class="number">5</span>,<span class="number">3</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">5</span>],[<span class="number">6</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">9</span>,[<span class="number">4</span>, <span class="number">11</span>, <span class="number">15</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">12</span>, [<span class="number">12</span>,<span class="number">13</span>,[<span class="number">10</span>], <span class="number">14</span>]]],<span class="number">16</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扁平化</span></span><br><span class="line"><span class="comment">//方法一：--注意 如果数组中没有空数组  可以用此方法</span></span><br><span class="line"><span class="comment">//var newArr = arr.toString().split(',')</span></span><br><span class="line"><span class="comment">//console.log(newArr) </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//方法二：</span></span><br><span class="line"><span class="keyword">var</span> newArr = []</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">falt</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span>(arr[i] <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">           falt(arr)</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            newArr.push(arr[i])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">falt() <span class="comment">// 执行函数</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'扁平化：'</span>, newArr)</span><br><span class="line"></span><br><span class="line"><span class="comment">//数组去重</span></span><br><span class="line"><span class="comment">//----方法一-------</span></span><br><span class="line"><span class="comment">//var dup = newArr.reduce((a, b) =&gt; &#123;</span></span><br><span class="line"><span class="comment">//    if(a.indexOf(b) === -1) &#123;</span></span><br><span class="line"><span class="comment">//       a.push(b)</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"><span class="comment">//    return a</span></span><br><span class="line"><span class="comment">//&#125;, [])</span></span><br><span class="line"><span class="comment">//console.log('去重后：', dup)</span></span><br><span class="line"><span class="comment">//------方法二------</span></span><br><span class="line"><span class="keyword">var</span> dup = newArr.filter(<span class="function">(<span class="params">el, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> arr.indexOf(el) === index</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'去重后：'</span>, dup)</span><br><span class="line"></span><br><span class="line"><span class="comment">//数组排序</span></span><br><span class="line">funciton bubbleSort(arr) &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; arr.length <span class="number">-1</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>; arr.length <span class="number">-1</span> -i; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(arr[j] &gt; arr[j+<span class="number">1</span>]) &#123;</span><br><span class="line">               <span class="keyword">let</span> temp = arr[j]</span><br><span class="line">               arr[j] = arr[j+<span class="number">1</span>]</span><br><span class="line">               arr[j+<span class="number">1</span>] = temp</span><br><span class="line">           	&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'排序后：'</span>, bubbleSort(dup))</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/tcp%E5%92%8Cudp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨坤的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/13/tcp%E5%92%8Cudp/" itemprop="url">tcp和udp</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-13T14:20:28+08:00">
+                2020-06-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="TCP"><a href="#TCP" class="headerlink" title="TCP:"></a>TCP:</h5><p>​    特点：面向连接 ， 可靠传输，面向字节流， 仅支持单向传播 ， 面向字节流提供拥塞控制， 适用于要求可靠传输</p>
+<pre><code>1. 客户端向服务端发送连接请求报文段，包含自身的数据通信初始序列。---SNY-SENT状态
+  2. 服务端接收到请求报文段后，同意，则发送一个应答，也包含自身数据通讯初始序列 ---RECEIVED状态
+  3. 客户端接收到连接同意应答后，还要向服务端发送一个确认报文</code></pre><h5 id="UDP"><a href="#UDP" class="headerlink" title="UDP:"></a>UDP:</h5><p>特点： 面向无连接,  不可靠传输， 面向报文， 支持一对多，  首部开销小 ，  适用于实时应用</p>
+<h5 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h5><ol>
+<li><p>TCP向上层提供面向连接的可靠服务 –UDP向上层提供面向无连接的 不可靠服务</p>
+</li>
+<li><p>UDP虽然没有TCP传输来的准确， 但在很多实时性要求很高的地方 有所作为</p>
+</li>
+<li><p>对数据准确性较高，速度可以相对较慢，可选用TCP</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/nextTick%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨坤的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/13/nextTick%E4%BD%BF%E7%94%A8/" itemprop="url">nextTick使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-13T09:16:30+08:00">
+                2020-06-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h6 id="nextTick-函数：DOM更新循环之后执行延迟回调"><a href="#nextTick-函数：DOM更新循环之后执行延迟回调" class="headerlink" title="nextTick()函数：DOM更新循环之后执行延迟回调"></a>nextTick()函数：DOM更新循环之后执行延迟回调</h6><h6 id="两种使用方法："><a href="#两种使用方法：" class="headerlink" title="两种使用方法："></a>两种使用方法：</h6><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 接收两个参数(回调函数， 执行回调函数的上下文环境)  </span></span><br><span class="line">Vue.nextTick([callback, context])</span><br><span class="line"><span class="keyword">this</span>.$nextTick()</span><br></pre></td></tr></table></figure>
+
+<h6 id="使用场景："><a href="#使用场景：" class="headerlink" title="使用场景："></a>使用场景：</h6><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">"change"</span>&gt;</span>改变msg<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">data() &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        msg: <span class="string">'hello'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">methods: &#123;</span><br><span class="line">    change() &#123;</span><br><span class="line">        <span class="keyword">this</span>.msg = <span class="string">'hello, change'</span></span><br><span class="line">        <span class="built_in">console</span>.log(msg) <span class="comment">// hello</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// =====================改为====</span></span><br><span class="line">methods: &#123;</span><br><span class="line">    change() &#123;</span><br><span class="line">        <span class="keyword">this</span>.msg = <span class="string">'hello change'</span></span><br><span class="line">        <span class="keyword">this</span>.$nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(msg)  <span class="comment">// 'hello change'</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>created() 钩子函数中进行的DOM操作， 一定要放在Vue.nextTick( )函数 中，因为 DOM元素还没有渲mounted() 钩子函数中dom元素已挂载和渲染   可执行DOM操作。</li>
+<li>在数据变化之后执行的某个操作，这个操作要使用随数据变化而变化的dom结构时，应该使用vue.nextTick()</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/rem%E9%80%82%E9%85%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -614,9 +998,9 @@
       
         
           
-            <h5 id="1-函数节流：-一个函数执行后-，-只有大于一个周期后才能执行（一个需要频繁触发的函数，处于性能优化考虑，在规定的时间内，只能执行一次）"><a href="#1-函数节流：-一个函数执行后-，-只有大于一个周期后才能执行（一个需要频繁触发的函数，处于性能优化考虑，在规定的时间内，只能执行一次）" class="headerlink" title="1. 函数节流： 一个函数执行后 ， 只有大于一个周期后才能执行（一个需要频繁触发的函数，处于性能优化考虑，在规定的时间内，只能执行一次）"></a>1. 函数节流： 一个函数执行后 ， 只有大于一个周期后才能执行（一个需要频繁触发的函数，处于性能优化考虑，在规定的时间内，只能执行一次）</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//交流函数</span></span><br><span class="line">funciton throttle(fn, delay) &#123;</span><br><span class="line">    <span class="comment">//就上一次函数触发时间</span></span><br><span class="line">    <span class="keyword">let</span> lastTime = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="comment">//记录当前函数触发时间</span></span><br><span class="line">        <span class="keyword">let</span> nowTime = <span class="built_in">Date</span>.now();</span><br><span class="line">        <span class="comment">//判断是否在一个周期内</span></span><br><span class="line">        <span class="keyword">if</span>(nowTime - lastTime &gt; delay) &#123;</span><br><span class="line">           <span class="comment">//改变this指向</span></span><br><span class="line">            fn.call(<span class="keyword">this</span>);</span><br><span class="line">            <span class="comment">//同步时间</span></span><br><span class="line">            lastTime = nowTime;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//频繁事件</span></span><br><span class="line"><span class="built_in">document</span>.onscroll = throttle(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(<span class="string">'节流函数被触发了'</span>，<span class="built_in">Date</span>.now());&#125;, <span class="number">200</span>)</span><br></pre></td></tr></table></figure>
+            <h4 id="1-函数节流："><a href="#1-函数节流：" class="headerlink" title="1. 函数节流："></a>1. 函数节流：</h4><h6 id="一个函数执行后-，-只有大于一个周期后才能执行（一个需要频繁触发的函数，处于性能优化考虑，在规定的时间内，只能执行一次）"><a href="#一个函数执行后-，-只有大于一个周期后才能执行（一个需要频繁触发的函数，处于性能优化考虑，在规定的时间内，只能执行一次）" class="headerlink" title="一个函数执行后 ， 只有大于一个周期后才能执行（一个需要频繁触发的函数，处于性能优化考虑，在规定的时间内，只能执行一次）"></a>一个函数执行后 ， 只有大于一个周期后才能执行（一个需要频繁触发的函数，处于性能优化考虑，在规定的时间内，只能执行一次）</h6><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//交流函数</span></span><br><span class="line">funciton throttle(fn, delay) &#123;</span><br><span class="line">    <span class="comment">//就上一次函数触发时间</span></span><br><span class="line">    <span class="keyword">let</span> lastTime = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="comment">//记录当前函数触发时间</span></span><br><span class="line">        <span class="keyword">let</span> nowTime = <span class="built_in">Date</span>.now();</span><br><span class="line">        <span class="comment">//判断是否在一个周期内</span></span><br><span class="line">        <span class="keyword">if</span>(nowTime - lastTime &gt; delay) &#123;</span><br><span class="line">           <span class="comment">//改变this指向</span></span><br><span class="line">            fn.call(<span class="keyword">this</span>);</span><br><span class="line">            <span class="comment">//同步时间</span></span><br><span class="line">            lastTime = nowTime;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//频繁事件</span></span><br><span class="line"><span class="built_in">document</span>.onscroll = throttle(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(<span class="string">'节流函数被触发了'</span>，<span class="built_in">Date</span>.now());&#125;, <span class="number">200</span>)</span><br></pre></td></tr></table></figure>
 
-<h5 id="2-函数防抖：一个需要频繁触发的函数，在规定时间内，只让最后一次生效。"><a href="#2-函数防抖：一个需要频繁触发的函数，在规定时间内，只让最后一次生效。" class="headerlink" title="2.函数防抖：一个需要频繁触发的函数，在规定时间内，只让最后一次生效。"></a>2.函数防抖：一个需要频繁触发的函数，在规定时间内，只让最后一次生效。</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>按钮<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-函数防抖："><a href="#2-函数防抖：" class="headerlink" title="2.函数防抖："></a>2.函数防抖：</h4><h6 id="一个需要频繁触发的函数，在规定时间内，只让最后一次生效。"><a href="#一个需要频繁触发的函数，在规定时间内，只让最后一次生效。" class="headerlink" title="一个需要频繁触发的函数，在规定时间内，只让最后一次生效。"></a>一个需要频繁触发的函数，在规定时间内，只让最后一次生效。</h6><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>按钮<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
 
@@ -752,7 +1136,6 @@
 <p>jcbsd你看书</p>
 <p>jcbsd你看书</p>
 <p>jcbsd你看书</p>
-
 
 
           
@@ -989,7 +1372,7 @@
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
